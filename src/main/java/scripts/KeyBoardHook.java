@@ -22,36 +22,24 @@ public class KeyBoardHook implements Runnable {
                 switch (event.vkCode) {
 
                     case 86:
-                        if(event.flags==0){
+                        if (event.flags == 0) {
                             Mouse.setDown(false);
                             Mouse.setUp(false);
                             Mouse.setLeft(false);
                             Mouse.setRight(false);
+                            Mouse.setRightRoll(false);
+                            Mouse.setLeftRoll(false);
                         }
                         break;
                     case 162:
                         if (event.flags == 0) {
-                            if(Mouse.isUp()){
-                            Mouse.setUp(false);
-                            }
-                            else{
-                                Mouse.setDown(false);
-                                Mouse.setUp(true);
-                            }
-                        }
-                        break;
-                    case 69:
-                       /** if (event.flags == 0) {
-                            Mouse.setDown(false);
-                            Mouse.setUp(true);
-                        } else {
-                            Mouse.setUp(false);
-                        }**/
-                        if (event.flags == 0) {
-                            if(Mouse.isUp()){
+                            if (Mouse.isUp()) {
                                 Mouse.setUp(false);
-                            }
-                            else{
+                                Mouse.setRight(false);
+                                Mouse.setLeft(false);
+                                Mouse.setRightRoll(false);
+                                Mouse.setLeftRoll(false);
+                            } else {
                                 Mouse.setDown(false);
                                 Mouse.setUp(true);
                             }
@@ -60,30 +48,35 @@ public class KeyBoardHook implements Runnable {
                     case 81:
                         if (event.flags == 0) {
                             Mouse.setUp(false);
-                            if(Mouse.isDown()) {
+                            if (Mouse.isDown()) {
                                 Mouse.setDown(false);
-                            }
-                            else{
+                            } else {
                                 Mouse.setDown(true);
                             }
                         }
                         break;
-                    case 107:
-                        if (event.flags == 0) {
-                            Mouse.setRight(false);
-                            Mouse.setLeft(true);
-                        } else {
-                            Mouse.setLeft(false);
-                        }
-                        break;
                     case 96:
-                        if (event.flags == 0) {
-                            Mouse.setLeft(false);
-                            Mouse.setRight(true);
-                        } else {
-                            Mouse.setRight(false);
+                      if(event.flags==0){
+                          Mouse.setRight(true);
+                      }
+                      else{
+                          Mouse.setRight(false);
+                      }
+                        break;
+                   case 107:
+                       if(event.flags==0){
+                           Mouse.setLeft(true);
+                       }
+                       else{
+                           Mouse.setLeft(false);
+                       }
+                        break;
+                    /**case 96:
+                        if(event.flags==0){
+                            Mouse.setOp2();
                         }
                         break;
+                   **/
                     case 19:
                         if (event.flags == 0) {
                             Mouse.setOnoff();
@@ -93,11 +86,31 @@ public class KeyBoardHook implements Runnable {
                         KeyBoardHook.this.setHookOff();
                         break;
                     case 32:
-                        if(event.flags==0) {
+                        if (event.flags == 0) {
                             Mouse.setDown(false);
                             Mouse.setUp(false);
                             Mouse.setLeft(false);
                             Mouse.setRight(false);
+                            Mouse.setRightRoll(false);
+                            Mouse.setLeftRoll(false);
+                        }
+                        break;
+                    case 100:
+                        if (Mouse.isUp()) {
+                            if (event.flags == 0) {
+                                Mouse.setLeftRoll(true);
+                            } else {
+                                Mouse.setLeftRoll(false);
+                            }
+                        }
+                        break;
+                    case 102:
+                        if (Mouse.isUp()) {
+                            if (event.flags == 0) {
+                                Mouse.setRightRoll(true);
+                            } else {
+                                Mouse.setRightRoll(false);
+                            }
                         }
                         break;
                     default:
