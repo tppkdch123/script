@@ -5,12 +5,21 @@ import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
 
+import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class KeyBoardHook implements Runnable {
 
     private WinUser.HHOOK hhk;
+
+    public static boolean shut=false;
+
+
+    private ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 1, 1, TimeUnit.MINUTES, new SynchronousQueue<Runnable>());
 
     //钩子回调函数
     private WinUser.LowLevelKeyboardProc keyboardProc = new WinUser.LowLevelKeyboardProc() {
@@ -25,18 +34,18 @@ public class KeyBoardHook implements Runnable {
                         if (event.flags == 0) {
                             Mouse.setDown(false);
                             Mouse.setUp(false);
-                            Mouse.setLeft(false);
-                            Mouse.setRight(false);
                             Mouse.setRightRoll(false);
                             Mouse.setLeftRoll(false);
+                            shut=true;
+                        }
+                        else{
+                            shut=false;
                         }
                         break;
                     case 162:
                         if (event.flags == 0) {
                             if (Mouse.isUp()) {
                                 Mouse.setUp(false);
-                                Mouse.setRight(false);
-                                Mouse.setLeft(false);
                                 Mouse.setRightRoll(false);
                                 Mouse.setLeftRoll(false);
                             } else {
@@ -56,27 +65,23 @@ public class KeyBoardHook implements Runnable {
                         }
                         break;
                     case 96:
-                      if(event.flags==0){
-                          Mouse.setRight(true);
-                      }
-                      else{
-                          Mouse.setRight(false);
-                      }
-                        break;
-                   case 107:
-                       if(event.flags==0){
-                           Mouse.setLeft(true);
-                       }
-                       else{
-                           Mouse.setLeft(false);
-                       }
-                        break;
-                    /**case 96:
-                        if(event.flags==0){
-                            Mouse.setOp2();
+                        if (event.flags == 0) {
+                            try {
+                                threadPoolExecutor.execute(new smallMouse(true));
+                            }catch (Exception e){
+                                break;
+                            }
                         }
                         break;
-                   **/
+                    case 107:
+                        if (event.flags == 0) {
+                            try {
+                                threadPoolExecutor.execute(new smallMouse(false));
+                            }catch (Exception e){
+                                break;
+                            }
+                        }
+                        break;
                     case 19:
                         if (event.flags == 0) {
                             Mouse.setOnoff();
@@ -89,10 +94,12 @@ public class KeyBoardHook implements Runnable {
                         if (event.flags == 0) {
                             Mouse.setDown(false);
                             Mouse.setUp(false);
-                            Mouse.setLeft(false);
-                            Mouse.setRight(false);
                             Mouse.setRightRoll(false);
                             Mouse.setLeftRoll(false);
+                            shut=true;
+                        }
+                        else{
+                            shut=false;
                         }
                         break;
                     case 100:
@@ -145,5 +152,36 @@ public class KeyBoardHook implements Runnable {
         //System.out.println("Hook Off!");
         User32.INSTANCE.UnhookWindowsHookEx(hhk);
         System.exit(0);
+
+    }
+}
+
+class smallMouse implements Runnable {
+
+    private boolean b;
+
+    public smallMouse(boolean b) {
+        this.b = b;
+    }
+
+    public void run() {
+        int u = 0;
+        All.setIsOP(true);
+        while (u < 110) {
+            if(!All.isOnoff()||KeyBoardHook.shut){
+                All.setIsOP(false);
+                return;
+            }
+            All.setX(b);
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                All.setIsOP(false);
+                Thread.interrupted();
+            }
+            u++;
+        }
+        All.setIsOP(false);
     }
 }
