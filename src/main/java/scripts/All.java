@@ -1,5 +1,7 @@
 package scripts;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -7,6 +9,8 @@ public class All {
     private static Robot robot;
 
     private static int vecX;
+
+    public static boolean ops =false;
 
     public static boolean isIsOP() {
         return isOP;
@@ -34,6 +38,14 @@ public class All {
     private static AtomicInteger Y = new AtomicInteger(0);
 
 
+    public static void setXBalance(boolean b){
+        if(b){
+            X.addAndGet(1);
+        }
+        else{
+            X.addAndGet(-1);
+        }
+    }
     public static int getX() {
         return X.get();
     }
@@ -79,7 +91,7 @@ public class All {
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        vecX = Toolkit.getDefaultToolkit().getScreenSize().width / 95;
+        vecX = Toolkit.getDefaultToolkit().getScreenSize().width / 90;
         vecY = Toolkit.getDefaultToolkit().getScreenSize().height / 70;
     }
 
