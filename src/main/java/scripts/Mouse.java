@@ -42,7 +42,6 @@ public class Mouse implements Runnable {
                         All.setY(true);
                     }
                     if (up) {
-                        //Y = y > 0 ? y.intValue() - vecY : 0 - vecY;
                         All.setY(false);
                     }
                     All.setPosition(baseX+All.getX(),baseY+All.getY());
@@ -61,12 +60,12 @@ public class Mouse implements Runnable {
             All.setOnoff(false);
             up = false;
             down = false;
+            All.closeTermination();
+            KeyBoardHook.shut = true;
         } else {
             All.setOnoff(true);
             up=false;
             down=false;
         }
-
     }
-
 }

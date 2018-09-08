@@ -1,16 +1,24 @@
 package scripts;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import lombok.Getter;
 
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static scripts.enums.Constant.hightLimit;
+import static scripts.enums.Constant.smallWidthLimit;
+import static scripts.enums.Constant.widthLimit;
+
+@Getter
 public class All {
     private static Robot robot;
 
     private static int vecX;
 
-    public static boolean ops =false;
+    private static int smallVecX;
+
+    @Getter
+    private static boolean isTermination = true;
 
     public static boolean isIsOP() {
         return isOP;
@@ -20,7 +28,11 @@ public class All {
         All.isOP = isOP;
     }
 
-    private static boolean isOP=false;
+    public static boolean isIsTermination() {
+        return isTermination;
+    }
+
+    private static boolean isOP = false;
 
     public static boolean isOnoff() {
         return onoff;
@@ -37,27 +49,27 @@ public class All {
     private static AtomicInteger X = new AtomicInteger(0);
     private static AtomicInteger Y = new AtomicInteger(0);
 
-
-    public static void setXBalance(boolean b){
-        if(b){
-            X.addAndGet(1);
-        }
-        else{
-            X.addAndGet(-1);
-        }
-    }
     public static int getX() {
         return X.get();
     }
 
-    public static void setX(Boolean b) {
+    public static void madeX(Boolean b) {
         if (b) {
             X.addAndGet(vecX);
-
         } else {
             X.addAndGet(-vecX);
         }
     }
+
+    public static void madeSmallX(boolean b){
+        if (b) {
+            X.addAndGet(smallVecX);
+        } else {
+            X.addAndGet(-smallVecX);
+        }
+    }
+
+
 
     public static int getY() {
         return Y.get();
@@ -71,7 +83,7 @@ public class All {
         }
     }
 
-    public static void setX(int vec){
+    public static void setX(int vec) {
         X.addAndGet(vec);
     }
 
@@ -85,22 +97,34 @@ public class All {
 
 
     static {
-
         try {
             robot = new Robot();
         } catch (AWTException e) {
             e.printStackTrace();
         }
-        vecX = Toolkit.getDefaultToolkit().getScreenSize().width / 90;
-        vecY = Toolkit.getDefaultToolkit().getScreenSize().height / 70;
+        vecX = Toolkit.getDefaultToolkit().getScreenSize().width / widthLimit;
+        vecY = Toolkit.getDefaultToolkit().getScreenSize().height / hightLimit;
+        smallVecX = Toolkit.getDefaultToolkit().getScreenSize().width / smallWidthLimit;
     }
 
     public static void setPosition(int x, int y) {
         robot.mouseMove(x, y);
     }
 
-    public static void clear(){
+    public static void clear() {
         X.set(0);
         Y.set(0);
+    }
+
+    public static void switchTermination() {
+        if (isTermination) {
+            isTermination = false;
+        } else {
+            isTermination = true;
+        }
+    }
+
+    public static void closeTermination(){
+        isTermination = true;
     }
 }
